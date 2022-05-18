@@ -8,11 +8,43 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
+import uuid from 'react-native-uuid';
+import database, {firebase} from '@react-native-firebase/database';
 
 const Register = () => {
   const [email, setemail] = useState<string>('');
   const [password, setpassword] = useState<string>('');
   const [username, setusername] = useState<string>('');
+  const onRegisterRDB = async () => {
+    if (username === '' || password === '' || email === '') {
+      Alert.alert('harap isi semua field');
+      return false;
+    }
+    let data = {
+      id: uuid.v4(),
+      username: username,
+      email: email,
+      password: password,
+    };
+    try {
+      firebase
+        .app()
+        .database(
+          'https://sanzchat-default-rtdb.asia-southeast1.firebasedatabase.app',
+        )
+        .ref('/users')
+        .set(data)
+        .then(() => {
+          Alert.alert('success, registrasi berhasil');
+          setemail('');
+          setpassword('');
+          setusername('');
+        });
+    } catch (error: unknown) {
+      console.log('Error', error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -34,8 +66,8 @@ const Register = () => {
         placeholder="Enter username"
         style={styles.input}
       />
-      <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>LOGIN NOW</Text>
+      <TouchableOpacity style={styles.button} onPress={onRegisterRDB}>
+        <Text style={styles.buttonText}>REGISTER NOW</Text>
       </TouchableOpacity>
       <View>
         <Text style={{textAlign: 'center'}}>

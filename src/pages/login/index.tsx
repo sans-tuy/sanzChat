@@ -6,10 +6,13 @@ import {
   View,
 } from 'react-native';
 import React, {useState} from 'react';
+import * as RootNavigation from '../../config/router/RootNavigation';
 
 const Login = () => {
   const [email, setemail] = useState<string>('');
   const [password, setpassword] = useState<string>('');
+
+  
   return (
     <View style={styles.container}>
       <TextInput
