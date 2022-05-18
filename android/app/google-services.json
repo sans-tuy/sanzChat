@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "173684152760",
+    "project_id": "sanzchat",
+    "storage_bucket": "sanzchat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:173684152760:android:34d3a67fcc9510d51c574d",
+        "android_client_info": {
+          "package_name": "com.sanzchat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "173684152760-sdulpdj510lgnra5c2hf6lba5honi5lg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sanzchat",
+            "certificate_hash": "23d7bb7f8866f37c663dd4119f776ab2c52d53ad"
+          }
+        },
+        {
+          "client_id": "173684152760-sborrlj5jojsjb189amvv5mv1h76k2rn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBahgUZHnJvADOHvMiryElRFQQtxkm0I-k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "173684152760-sborrlj5jojsjb189amvv5mv1h76k2rn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
