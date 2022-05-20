@@ -1,24 +1,25 @@
 // RootNavigation.js
 
 import {createNavigationContainerRef} from '@react-navigation/native';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
 type RootStackParamList = {
-  Home: undefined;
+  Login: undefined;
   Profile: {userId: string};
   Feed: {sort: 'latest' | 'top'} | undefined;
-  screen: keyof RootStackParamList;
-  params:
-    | string
-    | {userId: string}
-    | {sort: 'latest' | 'top'}
-    | {userId: string}
-    | undefined;
+  Register: undefined;
+  DashboarUser: undefined;
+  Chat: undefined;
 };
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>();
 
-export function navigate({screen, params}: RootStackParamList) {
+export function navigateData(screen: any) {
+  if (navigationRef.isReady()) {
+    navigationRef.navigate(screen);
+  }
+}
+
+export function navigate({screen, params}: any) {
   if (navigationRef.isReady()) {
     navigationRef.navigate(screen, params);
   }

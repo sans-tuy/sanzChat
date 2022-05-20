@@ -9,9 +9,10 @@ import {
 } from 'react-native';
 import React, {useState} from 'react';
 import uuid from 'react-native-uuid';
-import database, {firebase} from '@react-native-firebase/database';
+import * as navigation from '../../config/router/rootNavigation';
+import {firebase} from '@react-native-firebase/database';
 
-const Register = () => {
+const Register = ({navigasi}: any) => {
   const [email, setemail] = useState<string>('');
   const [password, setpassword] = useState<string>('');
   const [username, setusername] = useState<string>('');
@@ -33,12 +34,15 @@ const Register = () => {
           'https://sanzchat-default-rtdb.asia-southeast1.firebasedatabase.app',
         )
         .ref('/users')
+        .push()
         .set(data)
         .then(() => {
+          navigasi;
           Alert.alert('success, registrasi berhasil');
           setemail('');
           setpassword('');
           setusername('');
+          navigation.navigateData('Login');
         });
     } catch (error: unknown) {
       console.log('Error', error);
@@ -72,7 +76,7 @@ const Register = () => {
       <View>
         <Text style={{textAlign: 'center'}}>
           Have an account ?
-          <Pressable onPress={() => Alert.alert('press')}>
+          <Pressable onPress={() => navigation.navigateData('Login')}>
             <Text style={{fontWeight: 'bold'}}>Login</Text>
           </Pressable>
           Now!

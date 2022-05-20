@@ -1,18 +1,55 @@
 import {
+  Alert,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import React, {useState} from 'react';
-import * as RootNavigation from '../../config/router/RootNavigation';
+import React, {useState, VFC} from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import * as navigation from '../../config/router/rootNavigation';
+import {firebase, FirebaseDatabaseTypes} from '@react-native-firebase/database';
 
-const Login = () => {
+type userDataTypes = {
+  password?: string;
+  userData: string[];
+};
+
+const Login = ({navigasi, navigasiRegis}: any) => {
   const [email, setemail] = useState<string>('');
   const [password, setpassword] = useState<string>('');
 
-  
+  const onLoginRDB = () => {
+    try {
+      firebase
+        .app()
+        .database(
+          'https://sanzchat-default-rtdb.asia-southeast1.firebasedatabase.app',
+        )
+        .ref('users/')
+        .orderByChild('email')
+        .equalTo(email)
+        .once('value')
+        .then(async snapshot => {
+          if (snapshot.val() == null) {
+            Alert.alert('Invalid Email Id');
+            return false;
+          }
+          let userData: any = Object.values(snapshot.val())[0];
+          if (userData?.password != password) {
+            Alert.alert('Error', 'Invalid Password!');
+            return false;
+          }
+          console.log('User data: ', userData);
+          navigation.navigateData('DashboarUser');
+        });
+    } catch (error) {
+      Alert.alert('Error', 'Not Found User');
+    }
+  };
+
   return (
     <View style={styles.container}>
       <TextInput
@@ -28,12 +65,15 @@ const Login = () => {
         secureTextEntry={true}
         style={styles.input}
       />
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={onLoginRDB}>
         <Text style={styles.buttonText}>LOGIN NOW</Text>
       </TouchableOpacity>
       <View>
         <Text style={{textAlign: 'center'}}>
-          Not have account ? <Text style={{fontWeight: 'bold'}}>Register</Text>{' '}
+          Not have account ?{' '}
+          <Pressable onPress={() => navigation.navigateData('Register')}>
+            <Text style={{fontWeight: 'bold'}}>Register</Text>
+          </Pressable>
           Now!
         </Text>
       </View>

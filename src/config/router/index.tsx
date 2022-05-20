@@ -7,7 +7,7 @@ import {
 } from '@react-navigation/native-stack';
 import Login from '../../pages/login';
 import Register from '../../pages/register';
-import {navigationRef} from './RootNavigation';
+import {navigationRef} from './rootNavigation';
 import Chat from '../../pages/chat';
 import DashboardUser from '../../pages/dashboardUser';
 
