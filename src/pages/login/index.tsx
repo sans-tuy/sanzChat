@@ -11,6 +11,8 @@ import React, {useState, VFC} from 'react';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import * as navigation from '../../config/router/rootNavigation';
 import {firebase, FirebaseDatabaseTypes} from '@react-native-firebase/database';
+import {useDispatch, useSelector} from 'react-redux';
+import {increment, saveUserData} from '../../config/redux/reducer';
 
 type userDataTypes = {
   password?: string;
@@ -20,6 +22,9 @@ type userDataTypes = {
 const Login = ({navigasi, navigasiRegis}: any) => {
   const [email, setemail] = useState<string>('');
   const [password, setpassword] = useState<string>('');
+  const dispacth = useDispatch();
+  const value = useSelector((state: any) => state.counter.value);
+  const userData = useSelector((state: any) => state.counter.userData);
 
   const onLoginRDB = () => {
     try {
@@ -42,7 +47,7 @@ const Login = ({navigasi, navigasiRegis}: any) => {
             Alert.alert('Error', 'Invalid Password!');
             return false;
           }
-          console.log('User data: ', userData);
+          dispacth(saveUserData(userData));
           navigation.navigateData('DashboarUser');
         });
     } catch (error) {
@@ -67,6 +72,12 @@ const Login = ({navigasi, navigasiRegis}: any) => {
       />
       <TouchableOpacity style={styles.button} onPress={onLoginRDB}>
         <Text style={styles.buttonText}>LOGIN NOW</Text>
+      </TouchableOpacity>
+      <Text>value : {value}</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => dispacth(increment())}>
+        <Text style={styles.buttonText}>Increment</Text>
       </TouchableOpacity>
       <View>
         <Text style={{textAlign: 'center'}}>
