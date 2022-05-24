@@ -6,16 +6,30 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  ViewStyle,
+  TextStyle,
 } from 'react-native';
 import React, {useState} from 'react';
 import uuid from 'react-native-uuid';
 import * as navigation from '../../config/router/rootNavigation';
 import {firebase} from '@react-native-firebase/database';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import storage from '@react-native-firebase/storage';
+import {utils} from '@react-native-firebase/app';
 
 const Register = ({navigasi}: any) => {
   const [email, setemail] = useState<string>('');
   const [password, setpassword] = useState<string>('');
   const [username, setusername] = useState<string>('');
+  const [bio, setbio] = useState<string>('');
+  const [avatar, setavatar] = useState<string>('');
+  const [response, setResponse] = useState<any>(null);
+  const referenceStorage = storage();
+
+  const chooseImage = React.useCallback((type, options) => {
+    launchImageLibrary(options, setResponse);
+  }, []);
+
   const onRegisterRDB = async () => {
     if (username === '' || password === '' || email === '') {
       Alert.alert('harap isi semua field');
@@ -26,6 +40,7 @@ const Register = ({navigasi}: any) => {
       username: username,
       email: email,
       password: password,
+      avatar: avatar,
     };
     try {
       firebase
@@ -58,6 +73,12 @@ const Register = ({navigasi}: any) => {
         style={styles.input}
       />
       <TextInput
+        value={bio}
+        onChangeText={text => setbio(text)}
+        placeholder="Enter Bio"
+        style={styles.input}
+      />
+      <TextInput
         value={password}
         onChangeText={text => setpassword(text)}
         placeholder="Enter Password"
@@ -70,6 +91,37 @@ const Register = ({navigasi}: any) => {
         placeholder="Enter username"
         style={styles.input}
       />
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() =>
+          chooseImage('library', {
+            maxHeight: 200,
+            maxWidth: 200,
+            selectionLimit: 0,
+            mediaType: 'photo',
+            includeBase64: false,
+          })
+        }>
+        <Text style={styles.buttonText}>Choose Image</Text>
+      </TouchableOpacity>
+
+      {console.log('response image', response)}
+      {/* {console.log('utils', response['assets'][0]['uri'])} */}
+
+      <TouchableOpacity
+        onPress={async () => {
+          // path to existing file on filesystem
+          const pathToFile = response['assets'][0]['uri'];
+          // uploads file
+          await referenceStorage.ref(`/images/${username}`).putFile(pathToFile);
+          const url = await referenceStorage
+            .ref(`/images/${username}`)
+            .getDownloadURL();
+          console.log('url downloads', url);
+        }}>
+        <Text>Post image</Text>
+      </TouchableOpacity>
+
       <TouchableOpacity style={styles.button} onPress={onRegisterRDB}>
         <Text style={styles.buttonText}>REGISTER NOW</Text>
       </TouchableOpacity>
@@ -88,7 +140,14 @@ const Register = ({navigasi}: any) => {
 
 export default Register;
 
-const styles = StyleSheet.create({
+interface Styles {
+  container: ViewStyle;
+  input: ViewStyle;
+  button: ViewStyle;
+  buttonText: TextStyle;
+}
+
+const styles = StyleSheet.create<Styles>({
   input: {
     borderWidth: 1,
     borderRadius: 30,

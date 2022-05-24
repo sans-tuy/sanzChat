@@ -1,12 +1,14 @@
 //import liraries
 import React, {useState} from 'react';
-import {View, Text, StyleSheet, StatusBar} from 'react-native';
+import {View, Text, StyleSheet, StatusBar, Image} from 'react-native';
+import {useSelector} from 'react-redux';
 // create a component
 const ChatHeader = (props: any) => {
-  const {data} = props;
+  // const {data} = props;
+  const userData = useSelector((state: any) => state.counter.userData);
   // const [lastSeen, setlastSeen] = useState('')
   console.log('data chat header: ', props);
-  const dummy = data;
+  // const dummy = data;
   return (
     <View style={styles.container}>
       <StatusBar
@@ -15,15 +17,21 @@ const ChatHeader = (props: any) => {
         translucent={false}
       />
       <View style={{flex: 1, marginLeft: 10}}>
-        <Text
-          numberOfLines={1}
-          style={{
-            color: 'white',
-            fontSize: 16,
-            textTransform: 'capitalize',
-          }}>
-          {data.name}
-        </Text>
+        <View style={styles.headerChatWrapper}>
+          <Image
+            style={styles.pp}
+            source={require('../../assets/images/no-profile.png')}
+          />
+          <Text
+            numberOfLines={1}
+            style={{
+              color: 'white',
+              fontSize: 16,
+              textTransform: 'capitalize',
+            }}>
+            {userData.username}
+          </Text>
+        </View>
 
         {/* <Text
                     style={{ color: COLORS.primaryBackground, fontSize: 10,fontFamily: FONTS.Regular }}
@@ -43,6 +51,15 @@ const styles = StyleSheet.create({
     elevation: 5,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  pp: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    marginRight: 10,
+  },
+  headerChatWrapper: {
+    flexDirection: 'row',
   },
 });
 

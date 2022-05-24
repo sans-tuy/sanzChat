@@ -23,8 +23,6 @@ const Login = ({navigasi, navigasiRegis}: any) => {
   const [email, setemail] = useState<string>('');
   const [password, setpassword] = useState<string>('');
   const dispacth = useDispatch();
-  const value = useSelector((state: any) => state.counter.value);
-  const userData = useSelector((state: any) => state.counter.userData);
 
   const onLoginRDB = () => {
     try {
@@ -73,15 +71,9 @@ const Login = ({navigasi, navigasiRegis}: any) => {
       <TouchableOpacity style={styles.button} onPress={onLoginRDB}>
         <Text style={styles.buttonText}>LOGIN NOW</Text>
       </TouchableOpacity>
-      <Text>value : {value}</Text>
-      <TouchableOpacity
-        style={styles.button}
-        onPress={() => dispacth(increment())}>
-        <Text style={styles.buttonText}>Increment</Text>
-      </TouchableOpacity>
       <View>
         <Text style={{textAlign: 'center'}}>
-          Not have account ?{' '}
+          Not have account ?
           <Pressable onPress={() => navigation.navigateData('Register')}>
             <Text style={{fontWeight: 'bold'}}>Register</Text>
           </Pressable>

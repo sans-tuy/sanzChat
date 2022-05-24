@@ -1,5 +1,5 @@
 //import liraries
-// import moment from 'moment';
+import moment from 'moment';
 import {Icon} from 'native-base';
 import React, {Component} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
@@ -22,7 +22,7 @@ const TimeDelivery = (props: any) => {
           fontSize: 7,
           color: sender ? 'white' : 'black',
         }}>
-        {/* {moment(item.send_time).format('LLL')} */}
+        {moment(item.send_time).format('LLL')}
       </Text>
       <>
         {/* <Icon

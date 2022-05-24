@@ -7,10 +7,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  TextInput,
 } from 'react-native';
 
 import uuid from 'react-native-uuid';
-import database, {firebase} from '@react-native-firebase/database';
+import {firebase} from '@react-native-firebase/database';
 import * as navigation from '../../config/router/rootNavigation';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -18,7 +19,7 @@ const DashboardUser = () => {
   const [search, setsearch] = useState<string>('');
   const dispacth = useDispatch();
   const userData = useSelector((state: any) => state.counter.userData);
-  const [allUser, setallUser] = useState<any>([]);
+  const [allUser, setallUser] = useState<any[] | null | undefined>([]);
   const [allUserBackup, setallUserBackup] = useState<any>([]);
 
   // const { params } = props.route
@@ -104,12 +105,14 @@ const DashboardUser = () => {
   };
   const renderItem = ({item}: any) => {
     return (
-      <TouchableOpacity onPress={() => createChatList(item)}>
-        <View style={styles.card}>
-          <Text style={styles.nameCard}>{item.username}</Text>
-          {console.log('userdata: ', userData)}
-        </View>
-      </TouchableOpacity>
+      <>
+        <TouchableOpacity onPress={() => createChatList(item)}>
+          <View style={styles.card}>
+            <Text style={styles.nameCard}>{item.username}</Text>
+            {console.log('userdata: ', userData)}
+          </View>
+        </TouchableOpacity>
+      </>
       //   <TouchableOpacity onPress={() => createChatList(item)}>
       //   <View style={styles.card}>
       //     <Text style={styles.nameCard}>{item.name}</Text>
@@ -120,6 +123,12 @@ const DashboardUser = () => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <TextInput
+        value={search}
+        onChangeText={text => setsearch(text)}
+        placeholder="search by name"
+        style={styles.search}
+      />
       <FlatList
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
@@ -150,5 +159,11 @@ const styles = StyleSheet.create({
     color: 'black',
     fontWeight: 'bold',
     textAlign: 'center',
+  },
+  search: {
+    borderRadius: 10,
+    borderWidth: 1,
+    marginHorizontal: 10,
+    marginTop: 10,
   },
 });
