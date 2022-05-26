@@ -14,9 +14,9 @@ import uuid from 'react-native-uuid';
 import {firebase} from '@react-native-firebase/database';
 import * as navigation from '../../config/router/rootNavigation';
 import {useDispatch, useSelector} from 'react-redux';
-import {saveReceiverData} from '../../config/redux/reducer';
 
-const DashboardUser = () => {
+const AllUser = () => {
+  const [search, setsearch] = useState<string>('kunn');
   const dispacth = useDispatch();
   const userData = useSelector((state: any) => state.counter.userData);
   const [allUser, setallUser] = useState<any[] | null | undefined>([]);
@@ -51,6 +51,24 @@ const DashboardUser = () => {
             (it: any) => it.id != userData.id,
           ),
         );
+      });
+  };
+
+  const searchUser = () => {
+    firebase
+      .app()
+      .database(
+        'https://sanzchat-default-rtdb.asia-southeast1.firebasedatabase.app',
+      )
+      .ref('users/')
+      .once('value')
+      .then(snapshot => {
+        setallUser(
+          Object.values(snapshot.val()).filter(
+            (it: any) => it.username == search,
+          ),
+        );
+        console.log('all User data after changes: ', allUser);
       });
   };
 
@@ -96,11 +114,9 @@ const DashboardUser = () => {
             .then(() => console.log('Data updated.'));
 
           // navigation.navigate('ChatScreen', { receiverData: data, userData : userData });
-          dispacth(saveReceiverData(data));
           navigation.navigateData('Chat');
         } else {
           // navigation.navigate('ChatScreen', { receiverData: snapshot.val(), userData : userData });
-          dispacth(saveReceiverData(snapshot.val()));
           navigation.navigateData('Chat');
         }
       });
@@ -125,6 +141,16 @@ const DashboardUser = () => {
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <TextInput
+        value={search}
+        onChangeText={async (text: string) => {
+          await searchUser();
+          await setsearch(text);
+        }}
+        placeholder="search by name"
+        style={styles.search}
+        onKeyPress={() => searchUser}
+      />
       <FlatList
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
@@ -135,7 +161,7 @@ const DashboardUser = () => {
   );
 };
 
-export default DashboardUser;
+export default AllUser;
 
 const styles = StyleSheet.create({
   card: {

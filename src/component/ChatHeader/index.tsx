@@ -5,7 +5,7 @@ import {useSelector} from 'react-redux';
 // create a component
 const ChatHeader = (props: any) => {
   // const {data} = props;
-  const userData = useSelector((state: any) => state.counter.userData);
+  const receiverData = useSelector((state: any) => state.counter.receiverData);
   // const [lastSeen, setlastSeen] = useState('')
   console.log('data chat header: ', props);
   // const dummy = data;
@@ -29,7 +29,7 @@ const ChatHeader = (props: any) => {
               fontSize: 16,
               textTransform: 'capitalize',
             }}>
-            {userData.username}
+            {receiverData.username}
           </Text>
         </View>
 

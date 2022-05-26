@@ -31,7 +31,7 @@ const Register = ({navigasi}: any) => {
   }, []);
 
   const onRegisterRDB = async () => {
-    if (username === '' || password === '' || email === '') {
+    if (username === '' || password === '' || email === '' || bio === '') {
       Alert.alert('harap isi semua field');
       return false;
     }
@@ -40,7 +40,11 @@ const Register = ({navigasi}: any) => {
       username: username,
       email: email,
       password: password,
-      avatar: avatar,
+      avatar:
+        avatar === ''
+          ? 'https://firebasestorage.googleapis.com/v0/b/sanzchat.appspot.com/o/images%2FdefaultImage?alt=media&token=d28c6340-5615-406a-843e-bed17a8e0674'
+          : avatar,
+      bio: bio,
     };
     try {
       firebase
@@ -57,6 +61,8 @@ const Register = ({navigasi}: any) => {
           setemail('');
           setpassword('');
           setusername('');
+          setbio('');
+          setavatar('');
           navigation.navigateData('Login');
         });
     } catch (error: unknown) {
@@ -118,6 +124,7 @@ const Register = ({navigasi}: any) => {
             .ref(`/images/${username}`)
             .getDownloadURL();
           console.log('url downloads', url);
+          setavatar(url);
         }}>
         <Text>Post image</Text>
       </TouchableOpacity>

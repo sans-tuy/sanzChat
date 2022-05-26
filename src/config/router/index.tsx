@@ -19,6 +19,7 @@ type RootStackParamList = {
   Register: undefined;
   DashboarUser: undefined;
   Chat: undefined;
+  AllUser: undefined;
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login', 'Home'>;
@@ -36,6 +37,9 @@ function ChatScreen({route, navigation}: Props) {
 }
 
 function DashboarUserScreen({route, navigation}: Props) {
+  return <DashboardUser />;
+}
+function AllUserScreen() {
   return <DashboardUser />;
 }
 
@@ -63,6 +67,11 @@ const Router = () => {
         <RootStack.Screen
           name="DashboarUser"
           component={DashboarUserScreen}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="AllUser"
+          component={AllUserScreen}
           options={{headerShown: false}}
         />
       </RootStack.Navigator>
