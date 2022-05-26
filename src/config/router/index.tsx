@@ -10,6 +10,8 @@ import Register from '../../pages/register';
 import {navigationRef} from './rootNavigation';
 import Chat from '../../pages/chat';
 import DashboardUser from '../../pages/dashboardUser';
+import AllUser from '../../pages/allUser';
+import Profile from '../../pages/profile';
 
 type RootStackParamList = {
   Home: undefined;
@@ -20,6 +22,7 @@ type RootStackParamList = {
   DashboarUser: undefined;
   Chat: undefined;
   AllUser: undefined;
+  profile: undefined;
 };
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Login', 'Home'>;
@@ -39,8 +42,13 @@ function ChatScreen({route, navigation}: Props) {
 function DashboarUserScreen({route, navigation}: Props) {
   return <DashboardUser />;
 }
+
 function AllUserScreen() {
-  return <DashboardUser />;
+  return <AllUser />;
+}
+
+function ProfileScreen() {
+  return <Profile />;
 }
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -72,6 +80,11 @@ const Router = () => {
         <RootStack.Screen
           name="AllUser"
           component={AllUserScreen}
+          options={{headerShown: false}}
+        />
+        <RootStack.Screen
+          name="profile"
+          component={ProfileScreen}
           options={{headerShown: false}}
         />
       </RootStack.Navigator>

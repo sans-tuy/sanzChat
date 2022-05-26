@@ -8,6 +8,8 @@ import {
   TouchableOpacity,
   Alert,
   TextInput,
+  Image,
+  Pressable,
 } from 'react-native';
 
 import uuid from 'react-native-uuid';
@@ -124,13 +126,37 @@ const DashboardUser = () => {
   };
 
   return (
-    <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+    <SafeAreaView
+      style={{flex: 1, backgroundColor: 'white', position: 'relative'}}>
+      <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <Text>SanzChat</Text>
+        <View style={styles.iconHeaderWrapper}>
+          <Image
+            style={styles.iconHeader}
+            source={require('../../assets/icon/bell.png')}
+          />
+          <TouchableOpacity onPress={() => navigation.navigateData('profile')}>
+            <Image
+              style={styles.iconHeaderProfile}
+              source={require('../../assets/images/no-profile.png')}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
       <FlatList
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         data={allUser}
         renderItem={renderItem}
       />
+      <TouchableOpacity
+        onPress={() => navigation.navigateData('AllUser')}
+        style={styles.floatIconWrapper}>
+        <Image
+          style={styles.floatIcon}
+          source={require('../../assets/icon/user.png')}
+        />
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };
@@ -161,5 +187,29 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     marginHorizontal: 10,
     marginTop: 10,
+  },
+  floatIcon: {
+    width: undefined,
+    height: undefined,
+    flex: 1,
+  },
+  floatIconWrapper: {
+    width: 55,
+    height: 55,
+    position: 'absolute',
+    right: 30,
+    bottom: 30,
+  },
+  iconHeader: {
+    width: 35,
+    height: 35,
+  },
+  iconHeaderProfile: {
+    width: 35,
+    height: 35,
+    borderRadius: 20,
+  },
+  iconHeaderWrapper: {
+    flexDirection: 'row',
   },
 });

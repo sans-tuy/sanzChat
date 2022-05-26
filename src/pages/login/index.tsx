@@ -12,7 +12,7 @@ import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import * as navigation from '../../config/router/rootNavigation';
 import {firebase, FirebaseDatabaseTypes} from '@react-native-firebase/database';
 import {useDispatch, useSelector} from 'react-redux';
-import {increment, saveUserData} from '../../config/redux/reducer';
+import {saveUserData} from '../../config/redux/reducer';
 
 type userDataTypes = {
   password?: string;
