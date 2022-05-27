@@ -111,9 +111,6 @@ const Register = ({navigasi}: any) => {
         <Text style={styles.buttonText}>Choose Image</Text>
       </TouchableOpacity>
 
-      {console.log('response image', response)}
-      {/* {console.log('utils', response['assets'][0]['uri'])} */}
-
       <TouchableOpacity
         onPress={async () => {
           // path to existing file on filesystem

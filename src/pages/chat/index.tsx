@@ -16,6 +16,7 @@ import moment from 'moment';
 import SimpleToast from 'react-native-simple-toast';
 import ChatHeader from '../../component/ChatHeader';
 import MsgComponent from '../../component/msgComponent';
+import {useIsFocused} from '@react-navigation/native';
 
 type msgDataTypes = {
   roomId: string;
@@ -39,6 +40,7 @@ const Chat = () => {
   const [msg, setMsg] = useState<string>('');
   const [disabled, setdisabled] = useState<boolean>(false);
   const [allChat, setallChat] = useState<any>([]);
+  const isFocus = useIsFocused();
 
   useEffect(() => {
     const onChildAdd = firebase
@@ -60,7 +62,7 @@ const Chat = () => {
         )
         .ref('/messages' + receiverData.roomId)
         .off('child_added', onChildAdd);
-  }, [receiverData.roomId]);
+  }, [receiverData.roomId, isFocus]);
 
   const msgvalid = (txt: string) => txt && txt.replace(/\s/g, '').length;
   const sendMsg = () => {

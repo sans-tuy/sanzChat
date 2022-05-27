@@ -17,42 +17,42 @@ import {firebase} from '@react-native-firebase/database';
 import * as navigation from '../../config/router/rootNavigation';
 import {useDispatch, useSelector} from 'react-redux';
 import {saveReceiverData} from '../../config/redux/reducer';
+import {useIsFocused} from '@react-navigation/native';
 
 const DashboardUser = () => {
   const dispacth = useDispatch();
   const userData = useSelector((state: any) => state.counter.userData);
-  const [allUser, setallUser] = useState<any[] | null | undefined>([]);
+  const [allUser, setallUser] = useState<any[]>([]);
   const [allUserBackup, setallUserBackup] = useState<any>([]);
+  const isFocus = useIsFocused();
 
   // const { params } = props.route
   // const userData = params.userData
 
   useEffect(() => {
     getAllUser();
-    console.log('all user : ', allUser);
-    console.log('user data : ', userData);
-  }, []);
+    console.log('called');
+  }, [isFocus]);
 
   const getAllUser = () => {
+    console.log('get all');
     firebase
       .app()
       .database(
         'https://sanzchat-default-rtdb.asia-southeast1.firebasedatabase.app',
       )
-      .ref('users/')
+      .ref(`chatlist/${userData.id}`)
       .once('value')
       .then(snapshot => {
-        console.log('all User data: ', Object.values(snapshot.val()));
-        setallUser(
-          Object.values(snapshot.val()).filter(
-            (it: any) => it.id != userData.id,
-          ),
-        );
-        setallUserBackup(
-          Object.values(snapshot.val()).filter(
-            (it: any) => it.id != userData.id,
-          ),
-        );
+        if (snapshot != null) {
+          console.log('recent chat: ', Object.values(snapshot.val()));
+          setallUser(
+            Object.values(snapshot.val()).sort((a: any, b: any) =>
+              a.sendTime < b.sendTime ? 1 : -1,
+            ),
+          );
+          console.log('filter chat: ', allUser);
+        }
       });
   };
 
@@ -112,7 +112,13 @@ const DashboardUser = () => {
       <>
         <TouchableOpacity onPress={() => createChatList(item)}>
           <View style={styles.card}>
-            <Text style={styles.nameCard}>{item.username}</Text>
+            <View style={styles.avatarChatWrapper}>
+              <Image source={{uri: item.avatar}} style={styles.avatarChat} />
+            </View>
+            <View>
+              <Text style={styles.nameCard}>{item.username}</Text>
+              <Text>{item.bio}</Text>
+            </View>
             {/* {console.log('userdata: ', userData)} */}
           </View>
         </TouchableOpacity>
@@ -138,7 +144,7 @@ const DashboardUser = () => {
           <TouchableOpacity onPress={() => navigation.navigateData('profile')}>
             <Image
               style={styles.iconHeaderProfile}
-              source={require('../../assets/images/no-profile.png')}
+              source={{uri: userData.avatar}}
             />
           </TouchableOpacity>
         </View>
@@ -171,16 +177,15 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: 'green',
     borderRadius: 10,
-    justifyContent: 'center',
     height: 50,
     borderWidth: 2,
     marginTop: 10,
+    flexDirection: 'row',
   },
   nameCard: {
     fontSize: 14,
     color: 'black',
     fontWeight: 'bold',
-    textAlign: 'center',
   },
   search: {
     borderRadius: 10,
@@ -211,5 +216,18 @@ const styles = StyleSheet.create({
   },
   iconHeaderWrapper: {
     flexDirection: 'row',
+  },
+  avatarChat: {
+    width: undefined,
+    height: undefined,
+    flex: 1,
+    borderRadius: 15,
+  },
+  avatarChatWrapper: {
+    width: 30,
+    height: 30,
+    marginTop: 5,
+    marginLeft: 5,
+    marginRight: 5,
   },
 });

@@ -8,19 +8,24 @@ import {
   TouchableOpacity,
   Alert,
   TextInput,
+  Image,
 } from 'react-native';
 
 import uuid from 'react-native-uuid';
 import {firebase} from '@react-native-firebase/database';
 import * as navigation from '../../config/router/rootNavigation';
 import {useDispatch, useSelector} from 'react-redux';
+import {useIsFocused} from '@react-navigation/native';
 
 const AllUser = () => {
-  const [search, setsearch] = useState<string>('kunn');
+  const [searchText, setsearchText] = useState<string>('');
+  const [data, setdata] = useState<any[]>([]);
+  const [filterdata, setfilterdata] = useState<any[]>([]);
   const dispacth = useDispatch();
   const userData = useSelector((state: any) => state.counter.userData);
-  const [allUser, setallUser] = useState<any[] | null | undefined>([]);
+  const [allUser, setallUser] = useState<any[]>([]);
   const [allUserBackup, setallUserBackup] = useState<any>([]);
+  const isFocus = useIsFocused();
 
   // const { params } = props.route
   // const userData = params.userData
@@ -29,7 +34,17 @@ const AllUser = () => {
     getAllUser();
     console.log('all user : ', allUser);
     console.log('user data : ', userData);
-  }, []);
+  }, [isFocus]);
+
+  const search = (searchText: string) => {
+    setsearchText(searchText);
+
+    let filteredData = allUser.filter(function (item) {
+      return item.username.includes(searchText);
+    });
+
+    setfilterdata(filteredData);
+  };
 
   const getAllUser = () => {
     firebase
@@ -51,24 +66,6 @@ const AllUser = () => {
             (it: any) => it.id != userData.id,
           ),
         );
-      });
-  };
-
-  const searchUser = () => {
-    firebase
-      .app()
-      .database(
-        'https://sanzchat-default-rtdb.asia-southeast1.firebasedatabase.app',
-      )
-      .ref('users/')
-      .once('value')
-      .then(snapshot => {
-        setallUser(
-          Object.values(snapshot.val()).filter(
-            (it: any) => it.username == search,
-          ),
-        );
-        console.log('all User data after changes: ', allUser);
       });
   };
 
@@ -126,7 +123,13 @@ const AllUser = () => {
       <>
         <TouchableOpacity onPress={() => createChatList(item)}>
           <View style={styles.card}>
-            <Text style={styles.nameCard}>{item.username}</Text>
+            <View style={styles.avatarChatWrapper}>
+              <Image source={{uri: item.avatar}} style={styles.avatarChat} />
+            </View>
+            <View>
+              <Text style={styles.nameCard}>{item.username}</Text>
+              <Text>{item.bio}</Text>
+            </View>
             {/* {console.log('userdata: ', userData)} */}
           </View>
         </TouchableOpacity>
@@ -142,19 +145,15 @@ const AllUser = () => {
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <TextInput
-        value={search}
-        onChangeText={async (text: string) => {
-          await searchUser();
-          await setsearch(text);
-        }}
+        value={searchText}
+        onChangeText={search}
         placeholder="search by name"
         style={styles.search}
-        onKeyPress={() => searchUser}
       />
       <FlatList
         showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
-        data={allUser}
+        data={filterdata && filterdata.length > 0 ? filterdata : allUser}
         renderItem={renderItem}
       />
     </SafeAreaView>
@@ -171,21 +170,33 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderColor: 'green',
     borderRadius: 10,
-    justifyContent: 'center',
     height: 50,
     borderWidth: 2,
     marginTop: 10,
+    flexDirection: 'row',
   },
   nameCard: {
     fontSize: 14,
     color: 'black',
     fontWeight: 'bold',
-    textAlign: 'center',
   },
   search: {
     borderRadius: 10,
     borderWidth: 1,
     marginHorizontal: 10,
     marginTop: 10,
+  },
+  avatarChat: {
+    width: undefined,
+    height: undefined,
+    flex: 1,
+    borderRadius: 15,
+  },
+  avatarChatWrapper: {
+    width: 30,
+    height: 30,
+    marginTop: 5,
+    marginLeft: 5,
+    marginRight: 5,
   },
 });
